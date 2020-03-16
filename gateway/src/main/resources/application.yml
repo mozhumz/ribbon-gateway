@@ -1,0 +1,22 @@
+my-load-balanced-service:
+  ribbon:
+    listOfServers: localhost:1001,localhost:1002
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+#    NFLoadBalancerRuleClassName: com.gateway.config.MyRule
+    NFLoadBalancerPingClassName: com.yefengyu.gateway.loadbanlance.HealthExamination
+server:
+  port: 8080
+spring:
+  application:
+    name: gateway_server
+  cloud:
+    gateway:
+      default-filters:
+      routes:
+        - id: my_route
+#          uri: http://localhost:1001/
+          uri: lb://my-load-balanced-service
+          predicates:
+            - Path=/gateway/**
+          filters:
+            - StripPrefix=1
