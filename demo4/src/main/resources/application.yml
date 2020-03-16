@@ -1,0 +1,8 @@
+server:
+  port: 1004
+  servlet:
+    context-path: /demoPro
+
+spring:
+  application:
+    name: demoPro

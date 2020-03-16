@@ -1,9 +1,17 @@
-my-load-balanced-service:
+helloPro:
   ribbon:
     listOfServers: localhost:1001,localhost:1002
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
 #    NFLoadBalancerRuleClassName: com.gateway.config.MyRule
-    NFLoadBalancerPingClassName: com.yefengyu.gateway.loadbanlance.HealthExamination
+#    NFLoadBalancerPingClassName: com.yefengyu.gateway.loadbanlance.HealthExamination
+
+
+demoPro:
+  ribbon:
+    listOfServers: localhost:1003,localhost:1004
+    #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    #    NFLoadBalancerRuleClassName: com.gateway.config.MyRule
+#    NFLoadBalancerPingClassName: com.yefengyu.gateway.loadbanlance.HealthExamination
 server:
   port: 8080
 spring:
@@ -11,12 +19,23 @@ spring:
     name: gateway_server
   cloud:
     gateway:
-      default-filters:
+      discovery:
+        locator:
+          enabled: false
+          lowerCaseServiceId: true
+
+      #      default-filters:
       routes:
-        - id: my_route
+      - id: helloPro
 #          uri: http://localhost:1001/
-          uri: lb://my-load-balanced-service
-          predicates:
-            - Path=/gateway/**
-          filters:
-            - StripPrefix=1
+        uri: lb://helloPro
+        predicates:
+          - Path=/helloPro/**
+#        filters:
+#          - StripPrefix=1
+      - id: demoPro
+        uri: lb://demoPro
+        predicates:
+          - Path=/demoPro/**
+#        filters:
+#          - StripPrefix=1
